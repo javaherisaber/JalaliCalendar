@@ -1,0 +1,7 @@
+apply plugin: 'kotlin'
+group='com.github.javaherisaber'
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+    testImplementation "junit:junit:$versions.junit"
+}

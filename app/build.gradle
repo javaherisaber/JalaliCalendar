@@ -1,0 +1,29 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion config.compileSdk
+    defaultConfig {
+        applicationId "ir.logicbase.jalalicalendar.app"
+        minSdkVersion config.minSdk
+        targetSdkVersion config.targetSdk
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+    implementation "androidx.constraintlayout:constraintlayout:$versions.constraintLayout"
+    implementation "com.google.android.material:material:$versions.material"
+    testImplementation "junit:junit:$versions.junit"
+    implementation project(path: ':lib')
+}
