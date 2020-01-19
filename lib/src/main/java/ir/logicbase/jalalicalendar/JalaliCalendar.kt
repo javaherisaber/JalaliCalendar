@@ -382,8 +382,6 @@ class JalaliCalendar : Calendar {
      */
     operator fun rangeTo(that: JalaliCalendar) = JalaliCalendarRange(this, that)
 
-    override fun toString() = "${get(YEAR)}/${month.value}/${get(DAY_OF_MONTH)}"
-
     companion object {
 
         private const val AH = 1 // Value for the after hejra era.

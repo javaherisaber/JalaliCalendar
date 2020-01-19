@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import ir.logicbase.jalalicalendar.JalaliCalendar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,7 +17,9 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            textView.text = JalaliCalendar().toString()
+            textView.text = JalaliCalendar().run {
+                "${get(Calendar.YEAR)}/${month.value}/${get(Calendar.DAY_OF_MONTH)}"
+            }
         }
     }
 
