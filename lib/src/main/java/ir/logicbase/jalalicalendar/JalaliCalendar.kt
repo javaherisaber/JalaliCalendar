@@ -235,7 +235,7 @@ class JalaliCalendar : Calendar {
      */
     override fun getActualMaximum(field: Int): Int {
         if (field == DAY_OF_MONTH) {
-            daysInMonth
+            return daysInMonth
         }
         return getMaximum(field)
     }
