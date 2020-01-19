@@ -483,6 +483,7 @@ class JalaliCalendar : Calendar {
             28, 355, 7, 3, 1, 11, 23, 59, 59, 999, 50400000, 1200000
         )
 
+        @JvmStatic
         fun daysInMonth(leapYear: Boolean, month: Int): Int {
             require(month in 0..MonthPersian.Esfand.ordinal)
             return if (month == MonthPersian.Esfand.ordinal) {
@@ -494,8 +495,10 @@ class JalaliCalendar : Calendar {
             } else ACCUMULATED_DAYS_IN_MONTH[month + 1] - ACCUMULATED_DAYS_IN_MONTH[month]
         }
 
+        @JvmStatic
         fun daysInYear(year: Int) = if (isLeapYear(year)) 366 else 365
 
+        @JvmStatic
         fun isLeapYear(year: Int) = CalendarLeapUtils.isJalaliLeapYear(year)
     }
 }

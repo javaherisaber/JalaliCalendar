@@ -41,6 +41,7 @@ enum class DayOfWeekPersian {
         /**
          * DayOfWeek values in correct persian order
          */
+        @JvmStatic
         val valuesOrderedInPersian = arrayOf(
             Shanbeh, Yekshanbeh, Doshanbeh, Seshhanbeh, Chaharshanbeh, Panjshanbeh, Jomeh
         )
@@ -49,6 +50,7 @@ enum class DayOfWeekPersian {
          * get [DayOfWeekPersian] with given index
          * @param index dayOfWeek from 1 [Yekshanbeh] to 7 [Shanbeh]
          */
+        @JvmStatic
         fun of(index: Int): DayOfWeekPersian {
             require(index in 1..7) {
                 "index must be between 1 and 7"

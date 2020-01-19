@@ -4,13 +4,13 @@ class JalaliCalendarIterator(
     start: JalaliCalendar, private val endInclusive: JalaliCalendar
 ) : Iterator<JalaliCalendar> {
 
-    var initValue = JalaliCalendar(start)
+    private var initialValue = JalaliCalendar(start)
 
-    override fun hasNext(): Boolean = initValue <= endInclusive
+    override fun hasNext(): Boolean = initialValue <= endInclusive
 
     override fun next(): JalaliCalendar {
-        val current = JalaliCalendar(initValue)
-        initValue++
+        val current = JalaliCalendar(initialValue)
+        initialValue++
         return current
     }
 }

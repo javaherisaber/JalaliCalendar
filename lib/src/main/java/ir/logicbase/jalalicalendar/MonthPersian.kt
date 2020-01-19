@@ -26,7 +26,7 @@ enum class MonthPersian {
     val value: Int
         get() = ordinal + 1
 
-    val toPersian: String
+    val persianText: String
         get() = PERSIAN_MONTHS_FA[ordinal]
 
     companion object {
@@ -53,6 +53,7 @@ enum class MonthPersian {
          *
          * @param index the month-of-year to represent, from 0 [Farvardin] to 11 [Esfand]
          */
+        @JvmStatic
         fun of(index: Int): MonthPersian {
             require(index in 0..11) {
                 "Invalid value for MonthOfYear: $index"
