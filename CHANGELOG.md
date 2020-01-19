@@ -1,3 +1,5 @@
+## 1.0.3
+- Fix JalaliCalendar.getActualMaximum()
 ## 1.0.2
 - Remove toString() from JalaliCalendar
 ## 1.0.1
