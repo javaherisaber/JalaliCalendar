@@ -338,23 +338,29 @@ class JalaliCalendar : Calendar {
             throw IllegalArgumentException("Year must be set")
         }
 
-    val year: Int
+    var year: Int
         get() = get(YEAR)
+        set(value) = set(YEAR, value)
 
-    val month: MonthPersian
+    var month: MonthPersian
         get() = MonthPersian.of(get(MONTH))
+        set(value) = set(MONTH, value.ordinal)
 
-    val dayOfMonth: Int
+    var dayOfMonth: Int
         get() = get(DAY_OF_MONTH)
+        set(value) = set(DAY_OF_MONTH, value)
 
-    val hourOfDay: Int
+    var hourOfDay: Int
         get() = get(HOUR_OF_DAY)
+        set(value) = set(HOUR_OF_DAY, value)
 
-    val minute: Int
+    var minute: Int
         get() = get(MINUTE)
+        set(value) = set(MINUTE, value)
 
-    val second: Int
+    var second: Int
         get() = get(SECOND)
+        set(value) = set(SECOND, value)
 
     val dayOfWeek: DayOfWeekPersian
         get() = DayOfWeekPersian.of(get(DAY_OF_WEEK))
