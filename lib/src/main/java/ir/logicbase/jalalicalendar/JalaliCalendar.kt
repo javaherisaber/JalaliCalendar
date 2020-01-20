@@ -1,5 +1,7 @@
 package ir.logicbase.jalalicalendar
 
+import ir.logicbase.jalalicalendar.format.JalaliDateFormat
+import ir.logicbase.jalalicalendar.uti.CalendarLeapUtils
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
@@ -361,6 +363,14 @@ class JalaliCalendar : Calendar {
     var second: Int
         get() = get(SECOND)
         set(value) = set(SECOND, value)
+
+    var clock: Clock
+        get() = Clock(hourOfDay, minute, second)
+        set(value) {
+            hourOfDay = value.hour
+            minute = value.minute
+            second = value.second
+        }
 
     val dayOfWeek: DayOfWeekPersian
         get() = DayOfWeekPersian.of(get(DAY_OF_WEEK))
