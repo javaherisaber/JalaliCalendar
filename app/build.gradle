@@ -11,6 +11,13 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -21,7 +28,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
     implementation "androidx.constraintlayout:constraintlayout:$versions.constraintLayout"
     implementation "com.google.android.material:material:$versions.material"
     testImplementation "junit:junit:$versions.junit"
