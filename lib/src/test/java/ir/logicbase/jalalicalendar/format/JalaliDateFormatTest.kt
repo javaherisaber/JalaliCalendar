@@ -1,5 +1,7 @@
-package ir.logicbase.jalalicalendar
+package ir.logicbase.jalalicalendar.format
 
+import ir.logicbase.jalalicalendar.JalaliCalendar
+import ir.logicbase.jalalicalendar.MonthPersian
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

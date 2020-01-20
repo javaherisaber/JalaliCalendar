@@ -1,5 +1,10 @@
-package ir.logicbase.jalalicalendar
+package ir.logicbase.jalalicalendar.format
 
+import ir.logicbase.jalalicalendar.DayOfWeekPersian
+import ir.logicbase.jalalicalendar.JalaliCalendar
+import ir.logicbase.jalalicalendar.MonthPersian
+import ir.logicbase.jalalicalendar.extension.toLeadingZero
+import ir.logicbase.jalalicalendar.format.ClockFormat.Companion.PARSE_DELIMITER_TIME
 import java.util.*
 
 /**
@@ -31,16 +36,15 @@ import java.util.*
 class JalaliDateFormat(private val pattern: String) {
 
     fun format(calendar: JalaliCalendar): String = buildString {
-        var index = 0
-        while (index < pattern.length) {
-            when (pattern[index]) {
+        val index = FormatIndex(0)
+        while (index.pos < pattern.length) {
+            when (pattern[index.pos]) {
                 PATTERN_DAY_OF_WEEK_NUMBER_1 -> {
-                    val dayOfWeek = DayOfWeekPersian.valuesOrderedInPersian
-                        .indexOf(calendar.dayOfWeek) + 1
-                    if (pattern.substring(index..index + 1) == PATTERN_DAY_OF_WEEK_NUMBER_0) {
+                    val dayOfWeek = DayOfWeekPersian.valuesOrderedInPersian.indexOf(calendar.dayOfWeek) + 1
+                    if (index.peak(pattern, 1) == PATTERN_DAY_OF_WEEK_NUMBER_0) {
                         // ww
                         append(dayOfWeek.toLeadingZero())
-                        index++
+                        index.pos++
                     } else {
                         // w
                         append(dayOfWeek)
@@ -48,10 +52,10 @@ class JalaliDateFormat(private val pattern: String) {
                 }
                 PATTERN_DAY_OF_WEEK_LETTER -> {
                     val dayOfWeekText = calendar.dayOfWeek.persianText
-                    if (pattern.substring(index..index + 1) == PATTERN_DAY_OF_WEEK_WORD) {
+                    if (index.peak(pattern, 1) == PATTERN_DAY_OF_WEEK_WORD) {
                         // WW
                         append(dayOfWeekText)
-                        index++
+                        index.pos++
                     } else {
                         // W
                         append(dayOfWeekText[0])
@@ -59,10 +63,10 @@ class JalaliDateFormat(private val pattern: String) {
                 }
                 PATTERN_DAY_OF_MONTH_NUMBER_1 -> {
                     val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-                    if (pattern.substring(index..index + 1) == PATTERN_DAY_OF_MONTH_NUMBER_0) {
+                    if (index.peak(pattern, 1)== PATTERN_DAY_OF_MONTH_NUMBER_0) {
                         // dd
                         append(dayOfMonth.toLeadingZero())
-                        index++
+                        index.pos++
                     } else {
                         // d
                         append(dayOfMonth)
@@ -70,10 +74,10 @@ class JalaliDateFormat(private val pattern: String) {
                 }
                 PATTERN_MONTH_NUMBER_1 -> {
                     val month = calendar.get(Calendar.MONTH) + 1
-                    if (pattern.substring(index..index + 1) == PATTERN_MONTH_NUMBER_0) {
+                    if (index.peak(pattern, 1) == PATTERN_MONTH_NUMBER_0) {
                         // mm
                         append(month.toLeadingZero())
-                        index++
+                        index.pos++
                     } else {
                         // m
                         append(month)
@@ -84,83 +88,20 @@ class JalaliDateFormat(private val pattern: String) {
                 }
                 PATTERN_YEAR_NUMBER_1 -> {
                     val year = calendar.get(Calendar.YEAR)
-                    if (pattern.substring(index..index + 3) == PATTERN_YEAR_NUMBER_4) {
+                    if (index.peak(pattern, 3) == PATTERN_YEAR_NUMBER_4) {
                         // yyyy
                         append(year)
-                        index += 3
-                    } else if (pattern.substring(index..index + 1) == PATTERN_YEAR_NUMBER_2) {
+                        index.pos += 3
+                    } else if (index.peak(pattern, 1) == PATTERN_YEAR_NUMBER_2) {
                         // yy
                         append(year % 100)
-                        index++
+                        index.pos++
                     }
                 }
-                PATTERN_HOUR_NUMBER_24_1 -> {
-                    val hour = calendar.get(Calendar.HOUR_OF_DAY)
-                    if (pattern.substring(index..index + 1) == PATTERN_HOUR_NUMBER_24_0) {
-                        // HH
-                        append(hour.toLeadingZero())
-                        index++
-                    } else {
-                        // H
-                        append(hour)
-                    }
-                }
-                PATTERN_HOUR_NUMBER_12_1 -> {
-                    val hour = calendar.get(Calendar.HOUR_OF_DAY)
-                    if (pattern.substring(index..index + 1) == PATTERN_HOUR_NUMBER_12_0) {
-                        // hh
-                        append((hour % 12).toLeadingZero())
-                        index++
-                    } else {
-                        // h
-                        append(hour % 12)
-                    }
-                }
-                PATTERN_MINUTE_NUMBER_1 -> {
-                    val minute = calendar.get(Calendar.MINUTE)
-                    if (pattern.substring(index..index + 1) == PATTERN_MINUTE_NUMBER_0) {
-                        // tt
-                        append(minute.toLeadingZero())
-                        index++
-                    } else {
-                        // t
-                        append(minute)
-                    }
-                }
-                PATTERN_SECOND_NUMBER_1 -> {
-                    val second = calendar.get(Calendar.SECOND)
-                    if (pattern.substring(index..index + 1) == PATTERN_SECOND_NUMBER_0) {
-                        // ss
-                        append(second.toLeadingZero())
-                        index++
-                    } else {
-                        // s
-                        append(second)
-                    }
-                }
-                PATTERN_AM_PM_LETTER -> {
-                    if (isHourPM(calendar)) {
-                        append(PM_LETTER)
-                    } else {
-                        append(AM_LETTER)
-                    }
-                }
-                PATTERN_AM_PM_WORD -> {
-                    if (isHourPM(calendar)) {
-                        append(PM_WORD)
-                    } else {
-                        append(AM_WORD)
-                    }
-                }
-                else -> append(pattern[index])
+                else -> ClockFormat(pattern).format(calendar.clock, index, this)
             }
-            index++
+            index.pos++
         }
-    }
-
-    private fun isHourPM(calendar: JalaliCalendar): Boolean {
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        return (hour / 12) >= 1.0
     }
 
     /**
@@ -191,11 +132,6 @@ class JalaliDateFormat(private val pattern: String) {
         }
     }
 
-    /**
-     * @return number with leading zero eg. 07
-     */
-    private fun Int.toLeadingZero() = if (this < 10) "0$this" else this.toString()
-
     companion object {
         const val PATTERN_DAY_OF_WEEK_NUMBER_1 = 'w'
         const val PATTERN_DAY_OF_WEEK_NUMBER_0 = "ww"
@@ -209,26 +145,10 @@ class JalaliDateFormat(private val pattern: String) {
         const val PATTERN_YEAR_NUMBER_1 = 'y'
         const val PATTERN_YEAR_NUMBER_2 = "yy"
         const val PATTERN_YEAR_NUMBER_4 = "yyyy"
-        const val PATTERN_HOUR_NUMBER_24_1 = 'H'
-        const val PATTERN_HOUR_NUMBER_24_0 = "HH"
-        const val PATTERN_HOUR_NUMBER_12_1 = 'h'
-        const val PATTERN_HOUR_NUMBER_12_0 = "hh"
-        const val PATTERN_MINUTE_NUMBER_1 = 't'
-        const val PATTERN_MINUTE_NUMBER_0 = "tt"
-        const val PATTERN_SECOND_NUMBER_1 = 's'
-        const val PATTERN_SECOND_NUMBER_0 = "ss"
-        const val PATTERN_AM_PM_LETTER = 'a'
-        const val PATTERN_AM_PM_WORD = 'A'
-
-        const val AM_LETTER = "ص"
-        const val AM_WORD = "صبح"
-        const val PM_LETTER = "ع"
-        const val PM_WORD = "عصر"
 
         const val PARSE_PATTERN_DATE = "yyyy/mm/dd"
         const val PARSE_DELIMITER_DATE_TIME = ' '
         const val PARSE_DELIMITER_DATE = '/'
-        const val PARSE_DELIMITER_TIME = ':'
         const val PARSE_PATTERN_DATE_TIME = "yyyy/mm/dd HH:tt:ss"
     }
 }

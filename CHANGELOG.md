@@ -1,3 +1,8 @@
+## 1.2.0
+- Add setter functions to basic fields eg. year, dayOfMonth, month
+- Update java compatibility to kotlin-jdk8
+- Add clock and clockFormat classes
+- Add ClockPeriod and DateRange entities
 ## 1.1.0
 - Add datetime formatter
 ## 1.0.3

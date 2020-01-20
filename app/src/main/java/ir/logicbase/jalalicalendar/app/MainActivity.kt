@@ -5,8 +5,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import ir.logicbase.jalalicalendar.JalaliCalendar
-import ir.logicbase.jalalicalendar.toGregorianDateTime
-import ir.logicbase.jalalicalendar.toJalaliDateTime
+import ir.logicbase.jalalicalendar.extension.toGregorianDateTime
+import ir.logicbase.jalalicalendar.extension.toJalaliDateTime
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
