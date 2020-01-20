@@ -27,3 +27,4 @@ dependencies {
 - add example usage
 - use kotlin-jdk8
 - add locale support to JalaliDateFormat
+- add setter function to dayOfMonth, month, year, hourOfDay, minute and second
