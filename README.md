@@ -25,3 +25,5 @@ dependencies {
 ### todo
 
 - add example usage
+- use kotlin-jdk8
+- add locale support to JalaliDateFormat
