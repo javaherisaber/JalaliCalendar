@@ -1,3 +1,5 @@
+## 1.1.0
+- Add datetime formatter
 ## 1.0.3
 - Fix JalaliCalendar.getActualMaximum()
 ## 1.0.2
