@@ -63,4 +63,12 @@ class JalaliCalendarTest {
             index++
         }
     }
+
+    @Test
+    fun toStringTest() {
+        val calendar = JalaliCalendar()
+        calendar.clear()
+        calendar.set(1398, MonthPersian.Dey, 30)
+        assertEquals(calendar.toString(), "1398/10/30-0:0:0")
+    }
 }

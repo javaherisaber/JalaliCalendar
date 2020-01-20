@@ -1,10 +1,14 @@
 package ir.logicbase.jalalicalendar
 
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
+/**
+ * JalaliCalender is a sun based calendar which is being used in countries like Afghanistan and Iran
+ */
 class JalaliCalendar : Calendar {
 
     constructor(year: Int, month: Int, day: Int) : super(
@@ -50,6 +54,10 @@ class JalaliCalendar : Calendar {
 
     constructor(calendar: Calendar) : this() {
         timeInMillis = calendar.timeInMillis
+    }
+
+    constructor(date: Date) : this() {
+        timeInMillis = date.time
     }
 
     fun set(month: MonthPersian) = super.set(MONTH, month.ordinal)
@@ -249,8 +257,7 @@ class JalaliCalendar : Calendar {
     override fun getMinimum(field: Int): Int = MINIMUMS[field]
 
     @Throws(IllegalStateException::class)
-    override fun roll(field: Int, up: Boolean) =
-        throw IllegalStateException("Not supported")
+    override fun roll(field: Int, up: Boolean) = throw IllegalStateException("Not supported")
 
     private fun getOffset(localTime: Long): Int = timeZone.getOffset(localTime)
 
@@ -326,22 +333,34 @@ class JalaliCalendar : Calendar {
     val isLeapYear: Boolean
         get() {
             if (isSet(YEAR)) {
-                return isLeapYear(get(YEAR))
+                return isLeapYear(year)
             }
             throw IllegalArgumentException("Year must be set")
         }
 
-    val daysInMonth: Int
-        get() = daysInMonth(isLeapYear(get(YEAR)), get(MONTH))
-
-    val dayOfWeek: DayOfWeekPersian
-        get() = DayOfWeekPersian.of(get(DAY_OF_WEEK))
+    val year: Int
+        get() = get(YEAR)
 
     val month: MonthPersian
         get() = MonthPersian.of(get(MONTH))
 
-    val timeInSeconds: Long
-        get() = timeInMillis / 1000
+    val dayOfMonth: Int
+        get() = get(DAY_OF_MONTH)
+
+    val hourOfDay: Int
+        get() = get(HOUR_OF_DAY)
+
+    val minute: Int
+        get() = get(MINUTE)
+
+    val second: Int
+        get() = get(SECOND)
+
+    val dayOfWeek: DayOfWeekPersian
+        get() = DayOfWeekPersian.of(get(DAY_OF_WEEK))
+
+    val daysInMonth: Int
+        get() = daysInMonth(isLeapYear(year), get(MONTH))
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -350,8 +369,8 @@ class JalaliCalendar : Calendar {
         if (other !is Calendar) {
             return false
         }
-        return timeInMillis == other.timeInMillis && get(YEAR) == other[YEAR]
-                && get(MONTH) == other[MONTH] && get(DAY_OF_MONTH) == other[DAY_OF_MONTH]
+        return timeInMillis == other.timeInMillis && year == other[YEAR]
+                && get(MONTH) == other[MONTH] && dayOfMonth == other[DAY_OF_MONTH]
                 && get(HOUR) == other[HOUR] && get(MINUTE) == other[MINUTE]
                 && get(SECOND) == other[SECOND] && get(MILLISECOND) == other[MILLISECOND]
     }
@@ -359,9 +378,9 @@ class JalaliCalendar : Calendar {
     override fun hashCode(): Int {
         var result = super.hashCode()
         result = 31 * result + timeInMillis.toInt()
-        result = 31 * result + get(YEAR)
+        result = 31 * result + year
         result = 31 * result + get(MONTH)
-        result = 31 * result + get(DAY_OF_MONTH)
+        result = 31 * result + dayOfMonth
         result = 31 * result + get(HOUR)
         result = 31 * result + get(MINUTE)
         result = 31 * result + get(SECOND)
@@ -382,6 +401,13 @@ class JalaliCalendar : Calendar {
      */
     operator fun rangeTo(that: JalaliCalendar) = JalaliCalendarRange(this, that)
 
+    override fun toString() = if (isSet(YEAR)) {
+        "${year}/${month.value}/${dayOfMonth}-" +
+                "${get(HOUR_OF_DAY)}:${get(MINUTE)}:${get(SECOND)}"
+    } else {
+        timeInMillis.toString()
+    }
+
     companion object {
 
         private const val AH = 1 // Value for the after hejra era.
@@ -392,6 +418,14 @@ class JalaliCalendar : Calendar {
         private const val ONE_MINUTE_IN_MILLIS = 60 * ONE_SECOND_IN_MILLIS
         private const val ONE_HOUR_IN_MILLIS = 60 * ONE_MINUTE_IN_MILLIS
         private const val ONE_DAY_IN_MILLIS = 24 * ONE_HOUR_IN_MILLIS
+
+        const val GREGORIAN_DATE_FORMAT = "yyyy-MM-dd"
+        const val GREGORIAN_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss"
+        const val JALALI_PARSE_DATE_TIME_FORMAT = "yyyy/mm/dd HH:tt:ss"
+        const val JALALI_DATE_TIME_FORMAT = "WW dd M yyyy ساعت HH:tt:ss"
+
+        @JvmField
+        val DEFAULT_LOCALE: Locale = Locale.US
 
         private val FIXED_DATES = intArrayOf(
             492347,  // False   ,  1349
@@ -498,5 +532,40 @@ class JalaliCalendar : Calendar {
 
         @JvmStatic
         fun isLeapYear(year: Int) = CalendarLeapUtils.isJalaliLeapYear(year)
+
+        /**
+         * Parse gregorian datetime string to JalaliCalendar
+         *
+         * @param dateTime calendar datetime based on [pattern] eg. 2020-01-17
+         * @param pattern date time format pattern eg. yyyy-MM-dd
+         * @param locale date time format locale eg. per or en
+         * @return [JalaliCalendar] parsed from given [dateTime]
+         */
+        @JvmStatic
+        fun fromGregorianDateTime(
+            dateTime: String,
+            pattern: String = GREGORIAN_DATE_FORMAT,
+            locale: Locale = DEFAULT_LOCALE
+        ): JalaliCalendar {
+            val dateFormat = SimpleDateFormat(pattern, locale)
+            val date = dateFormat.parse(dateTime)
+            return JalaliCalendar(date)
+        }
+
+        /**
+         * Parse jalali datetime string to JalaliCalendar
+         *
+         * @param dateTime calendar datetime based on [pattern] eg. 1398/10/30 14:28:30
+         * @param pattern date time format pattern eg. [JALALI_PARSE_DATE_TIME_FORMAT]
+         * @return [JalaliCalendar] parsed from given [dateTime]
+         */
+        @JvmStatic
+        fun fromJalaliDateTime(
+            dateTime: String,
+            pattern: String = JALALI_PARSE_DATE_TIME_FORMAT
+        ): JalaliCalendar {
+            val dateFormat = JalaliDateFormat(pattern)
+            return dateFormat.parse(dateTime)
+        }
     }
 }

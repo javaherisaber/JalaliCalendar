@@ -2,6 +2,9 @@ package ir.logicbase.jalalicalendar
 
 import kotlin.math.floor
 
+/**
+ * Utility functions to calculate leap year with high precision
+ */
 internal object CalendarLeapUtils {
 
     fun isJalaliLeapYear(year: Int): Boolean {

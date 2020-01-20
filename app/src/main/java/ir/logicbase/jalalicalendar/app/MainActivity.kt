@@ -5,9 +5,10 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import ir.logicbase.jalalicalendar.JalaliCalendar
+import ir.logicbase.jalalicalendar.toGregorianDateTime
+import ir.logicbase.jalalicalendar.toJalaliDateTime
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,9 +18,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            textView.text = JalaliCalendar().run {
-                "${get(Calendar.YEAR)}/${month.value}/${get(Calendar.DAY_OF_MONTH)}"
-            }
+            textView_gregorian.text = JalaliCalendar().toGregorianDateTime()
+            textView_jalali.text = JalaliCalendar().toJalaliDateTime()
         }
     }
 

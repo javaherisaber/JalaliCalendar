@@ -1,5 +1,8 @@
 package ir.logicbase.jalalicalendar
 
+/**
+ * Iterator class being used in Kotlin rangeTo function
+ */
 class JalaliCalendarIterator(
     start: JalaliCalendar, private val endInclusive: JalaliCalendar
 ) : Iterator<JalaliCalendar> {

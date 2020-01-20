@@ -21,7 +21,7 @@ enum class DayOfWeekPersian {
     val value: Int
         get() = ordinal + 1
 
-    val toPersian: String
+    val persianText: String
         get() = WEEKDAYS_FA[ordinal]
 
     companion object {
