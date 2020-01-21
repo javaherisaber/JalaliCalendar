@@ -1,3 +1,5 @@
+## 1.2.2
+- Change minute pattern from 't' to 'i'
 ## 1.2.1
 - Fix format issue when FormatIndex reaches end of pattern
 ## 1.2.0
