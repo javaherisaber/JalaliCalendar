@@ -11,8 +11,8 @@ import ir.logicbase.jalalicalendar.extension.toLeadingZero
  * HH for hour of day number (24 hour-based) with leading zero eg. 07
  * h for hour of day number (12 hour-based) no leading zero eg. 7
  * hh for hour of day number (12 hour-based) with leading zero eg. 07
- * t for minute number no leading zero eg. 5
- * tt for minute number with leading zero eg. 05
+ * i for minute number no leading zero eg. 5
+ * ii for minute number with leading zero eg. 05
  * s for second number no leading zero eg. 5
  * ss for second number with leading zero eg. 05
  * a for Am/Pm first letter eg. ص
@@ -81,11 +81,11 @@ class ClockFormat(private val pattern: String) {
             }
             PATTERN_MINUTE_NUMBER_1 -> {
                 if (index.peak(pattern, 1) == PATTERN_MINUTE_NUMBER_0) {
-                    // tt
+                    // ii
                     process(clock.minute, true, 1)
                     index.pos++
                 } else {
-                    // t
+                    // i
                     process(clock.minute, false)
                 }
             }
@@ -146,8 +146,8 @@ class ClockFormat(private val pattern: String) {
         const val PATTERN_HOUR_NUMBER_24_0 = "HH"
         const val PATTERN_HOUR_NUMBER_12_1 = 'h'
         const val PATTERN_HOUR_NUMBER_12_0 = "hh"
-        const val PATTERN_MINUTE_NUMBER_1 = 't'
-        const val PATTERN_MINUTE_NUMBER_0 = "tt"
+        const val PATTERN_MINUTE_NUMBER_1 = 'i'
+        const val PATTERN_MINUTE_NUMBER_0 = "ii"
         const val PATTERN_SECOND_NUMBER_1 = 's'
         const val PATTERN_SECOND_NUMBER_0 = "ss"
         const val PATTERN_AM_PM_LETTER = 'a'
@@ -160,7 +160,7 @@ class ClockFormat(private val pattern: String) {
 
         const val PARSE_DELIMITER_TIME = ':'
         const val PARSE_PATTERN_HOUR = "HH"
-        const val PARSE_PATTERN_HOUR_MINUTE = "HH:tt"
-        const val PARSE_PATTERN_HOUR_MINUTE_SECOND = "HH:tt:ss"
+        const val PARSE_PATTERN_HOUR_MINUTE = "HH:ii"
+        const val PARSE_PATTERN_HOUR_MINUTE_SECOND = "HH:ii:ss"
     }
 }

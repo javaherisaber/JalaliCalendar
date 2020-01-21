@@ -149,6 +149,6 @@ class JalaliDateFormat(private val pattern: String) {
         const val PARSE_PATTERN_DATE = "yyyy/mm/dd"
         const val PARSE_DELIMITER_DATE_TIME = ' '
         const val PARSE_DELIMITER_DATE = '/'
-        const val PARSE_PATTERN_DATE_TIME = "yyyy/mm/dd HH:tt:ss"
+        const val PARSE_PATTERN_DATE_TIME = "yyyy/mm/dd HH:ii:ss"
     }
 }

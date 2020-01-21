@@ -34,13 +34,13 @@ class JalaliDateFormatTest {
     }
 
     companion object {
-        const val PATTERN1 = "WW dd M yyyy ساعت HH:tt:ss"
+        const val PATTERN1 = "WW dd M yyyy ساعت HH:ii:ss"
         const val PATTERN2 = "yyyy/m/d"
         const val PATTERN3 = "WW dd M yyyy"
         const val PATTERN4 = "dd M yyyy"
-        const val PATTERN5 = "ww dd M yyyy ساعت HH:tt a"
-        const val PATTERN6 = "W dd M yy ساعت HH:tt A"
-        const val PATTERN7 = "yyyy/mm/dd HH:tt:ss"
+        const val PATTERN5 = "ww dd M yyyy ساعت HH:ii a"
+        const val PATTERN6 = "W dd M yy ساعت HH:ii A"
+        const val PATTERN7 = "yyyy/mm/dd HH:ii:ss"
         const val PATTERN8 = "yyyy/mm/dd"
 
         const val DATE_TIME1 = "دوشنبه 30 دی 1398 ساعت 13:45:30"

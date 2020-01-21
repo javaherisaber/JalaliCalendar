@@ -32,12 +32,12 @@ class ClockFormatTest {
     }
 
     companion object {
-        const val PATTERN1 = "HH:tt:ss"
-        const val PATTERN2 = "hh:tt:ss A"
-        const val PATTERN3 = "hh:tt:ss a"
-        const val PATTERN4 = "h:tt A"
-        const val PATTERN5 = "HH:tt:ss10"
-        const val PATTERN6 = "HH:tt10"
+        const val PATTERN1 = "HH:ii:ss"
+        const val PATTERN2 = "hh:ii:ss A"
+        const val PATTERN3 = "hh:ii:ss a"
+        const val PATTERN4 = "h:ii A"
+        const val PATTERN5 = "HH:ii:ss10"
+        const val PATTERN6 = "HH:ii10"
 
         const val TIME1 = "13:45:00"
         const val TIME2 = "01:45:00 عصر"
