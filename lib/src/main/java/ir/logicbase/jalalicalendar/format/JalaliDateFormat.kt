@@ -63,7 +63,7 @@ class JalaliDateFormat(private val pattern: String) {
                 }
                 PATTERN_DAY_OF_MONTH_NUMBER_1 -> {
                     val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-                    if (index.peak(pattern, 1)== PATTERN_DAY_OF_MONTH_NUMBER_0) {
+                    if (index.peak(pattern, 1) == PATTERN_DAY_OF_MONTH_NUMBER_0) {
                         // dd
                         append(dayOfMonth.toLeadingZero())
                         index.pos++

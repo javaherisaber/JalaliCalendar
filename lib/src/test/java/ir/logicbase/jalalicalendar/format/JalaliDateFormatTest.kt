@@ -29,18 +29,19 @@ class JalaliDateFormatTest {
     @Test
     fun parse() {
         val calendar2 = JalaliCalendar(1398, MonthPersian.Dey, 30)
-        assertEquals(JalaliDateFormat(PATTERN2).parse(DATE_TIME2), calendar2)
         assertEquals(JalaliDateFormat(PATTERN7).parse(DATE_TIME7), calendar)
+        assertEquals(JalaliDateFormat(PATTERN8).parse(DATE_TIME2), calendar2)
     }
 
     companion object {
         const val PATTERN1 = "WW dd M yyyy ساعت HH:tt:ss"
-        const val PATTERN2 = "yyyy/mm/dd"
+        const val PATTERN2 = "yyyy/m/d"
         const val PATTERN3 = "WW dd M yyyy"
         const val PATTERN4 = "dd M yyyy"
         const val PATTERN5 = "ww dd M yyyy ساعت HH:tt a"
         const val PATTERN6 = "W dd M yy ساعت HH:tt A"
         const val PATTERN7 = "yyyy/mm/dd HH:tt:ss"
+        const val PATTERN8 = "yyyy/mm/dd"
 
         const val DATE_TIME1 = "دوشنبه 30 دی 1398 ساعت 13:45:30"
         const val DATE_TIME2 = "1398/10/30"
