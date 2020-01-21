@@ -1,3 +1,5 @@
+## 1.2.1
+- Fix format issue when FormatIndex reaches end of pattern
 ## 1.2.0
 - Add setter functions to basic fields eg. year, dayOfMonth, month
 - Update java compatibility to kotlin-jdk8
