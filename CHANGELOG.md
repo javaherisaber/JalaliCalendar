@@ -1,3 +1,6 @@
+## 1.2.4
+- Remove toString from JalaliCalendar and Clock
+- Add toMinutes function to Clock
 ## 1.2.2
 - Change minute pattern from 't' to 'i'
 ## 1.2.1

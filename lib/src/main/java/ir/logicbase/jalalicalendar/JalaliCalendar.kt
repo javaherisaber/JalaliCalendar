@@ -62,6 +62,10 @@ class JalaliCalendar : Calendar {
         timeInMillis = date.time
     }
 
+    constructor(timeInMillis: Long) : this() {
+        this.timeInMillis = timeInMillis
+    }
+
     fun set(month: MonthPersian) = super.set(MONTH, month.ordinal)
 
     fun set(year: Int, month: MonthPersian, date: Int) = super.set(year, month.ordinal, date)
