@@ -1,3 +1,5 @@
+## 1.2.5
+- Fix dst boundaries wrong fields computation
 ## 1.2.4
 - Remove toString from JalaliCalendar and Clock
 - Add toMinutes function to Clock
