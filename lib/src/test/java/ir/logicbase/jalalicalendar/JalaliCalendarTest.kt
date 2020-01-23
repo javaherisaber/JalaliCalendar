@@ -69,7 +69,7 @@ class JalaliCalendarTest {
         val calendar = JalaliCalendar()
         calendar.clear()
         calendar.set(1398, MonthPersian.Dey, 30)
-        assertEquals(calendar.toString(), "1398/10/30-0:0:0")
+        assertEquals(calendar.toString(), "1398/10/30 00:00:00")
     }
 
     @Test
