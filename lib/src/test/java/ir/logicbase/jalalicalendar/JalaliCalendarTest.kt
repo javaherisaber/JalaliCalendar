@@ -71,4 +71,16 @@ class JalaliCalendarTest {
         calendar.set(1398, MonthPersian.Dey, 30)
         assertEquals(calendar.toString(), "1398/10/30-0:0:0")
     }
+
+    @Test
+    fun computeDstBoundaries() {
+        val jalali = JalaliCalendar(1399, MonthPersian.Shahrivar, 30, 23, 0)
+        jalali.add(Calendar.HOUR_OF_DAY, 1)
+        assertEquals(jalali.dayOfMonth, 31)
+        assertEquals(jalali.clock, Clock(0, 0, 0))
+        jalali.set(1399, MonthPersian.Farvardin, 1, 23, 0)
+        jalali.add(Calendar.HOUR_OF_DAY, 1)
+        assertEquals(jalali.dayOfMonth, 2)
+        assertEquals(jalali.clock, Clock(0, 0, 0))
+    }
 }

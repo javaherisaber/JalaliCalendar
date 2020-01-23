@@ -1,5 +1,6 @@
 package ir.logicbase.jalalicalendar
 
+import ir.logicbase.jalalicalendar.extension.toJalaliDateTime
 import ir.logicbase.jalalicalendar.format.JalaliDateFormat
 import ir.logicbase.jalalicalendar.uti.CalendarLeapUtils
 import java.text.SimpleDateFormat
@@ -69,6 +70,9 @@ class JalaliCalendar : Calendar {
     fun set(month: MonthPersian) = super.set(MONTH, month.ordinal)
 
     fun set(year: Int, month: MonthPersian, date: Int) = super.set(year, month.ordinal, date)
+
+    fun set(year: Int, month: MonthPersian, date: Int, hourOfDay: Int, minute: Int) =
+        super.set(year, month.ordinal, date, hourOfDay, minute)
 
     override fun add(field: Int, value: Int) {
         var valueCopy = value
@@ -141,10 +145,10 @@ class JalaliCalendar : Calendar {
          * crossing the boundary.
          */
         val zoneOffset = timeZone.rawOffset
-        val offsetBefore = getOffset(time + zoneOffset)
-        val offsetAfter = getOffset(time + zoneOffset + delta)
+        val offsetBefore = timeZone.getOffset(time + zoneOffset)
+        val offsetAfter = timeZone.getOffset(time + zoneOffset + delta)
         val dstDelta = offsetBefore - offsetAfter
-        if (getOffset(time + zoneOffset + delta + dstDelta) == offsetAfter) {
+        if (timeZone.getOffset(time + zoneOffset + delta + dstDelta) == offsetAfter) {
             delta += dstDelta.toLong()
         }
         time += delta
@@ -153,8 +157,11 @@ class JalaliCalendar : Calendar {
     }
 
     override fun computeFields() {
-        val timeInZone = time + getOffset(time)
-        val fixedDate = floor(timeInZone * 1.0 / ONE_DAY_IN_MILLIS).toInt() + EPOCH_OFFSET
+        val zoneOffset = timeZone.getOffset(time)
+        fields[ZONE_OFFSET] = timeZone.rawOffset
+        fields[DST_OFFSET] = zoneOffset - timeZone.rawOffset
+        val timeInZone = time + zoneOffset
+        var fixedDate = floor(timeInZone * 1.0 / ONE_DAY_IN_MILLIS).toInt() + EPOCH_OFFSET
         fields[YEAR] = getYearFromFixedDate(fixedDate)
         if (fields[YEAR] <= 0) {
             fields[YEAR] = -fields[YEAR] + 1
@@ -167,12 +174,12 @@ class JalaliCalendar : Calendar {
         if (fields[DAY_OF_YEAR] < ACCUMULATED_DAYS_IN_MONTH[6]) {
             fields[MONTH] = floor((fields[DAY_OF_YEAR] - 1) / 31.0).toInt() // month range is 0-11
         } else {
-            fields[MONTH] = floor(
-                (fields[DAY_OF_YEAR] - 1 - ACCUMULATED_DAYS_IN_MONTH[6]) / 30.0
-            ).toInt() + 6
+            fields[MONTH] = floor((fields[DAY_OF_YEAR] - 1 - ACCUMULATED_DAYS_IN_MONTH[6]) / 30.0).toInt() + 6
         }
+        val dayOfMonthBefore = fields[DAY_OF_MONTH] // before updating DAY_OF_MONTH field
         fields[DAY_OF_MONTH] = fields[DAY_OF_YEAR] - ACCUMULATED_DAYS_IN_MONTH[fields[MONTH]]
-        var extra = timeInZone - (fixedDate - EPOCH_OFFSET) * ONE_DAY_IN_MILLIS
+        val fixedDateMillis = fixedDate - EPOCH_OFFSET
+        var extra = timeInZone - (fixedDateMillis) * ONE_DAY_IN_MILLIS
         fields[HOUR_OF_DAY] = floor(extra * 1.0 / ONE_HOUR_IN_MILLIS).toInt()
         if (fields[HOUR_OF_DAY] >= 12) {
             fields[HOUR] = fields[HOUR_OF_DAY] - 12
@@ -187,8 +194,41 @@ class JalaliCalendar : Calendar {
         fields[SECOND] = floor(extra * 1.0 / ONE_SECOND_IN_MILLIS).toInt()
         extra -= fields[SECOND] * ONE_SECOND_IN_MILLIS
         fields[MILLISECOND] = extra.toInt()
-        fields[DAY_OF_WEEK] =
-            if (fixedDate >= 0) (fixedDate + 4) % 7 + 1 else (fixedDate - 1) % 7 + 7
+        if (computeDstBoundaries(dayOfMonthBefore)) {
+            fixedDate += 1
+        }
+        fields[DAY_OF_WEEK] = if (fixedDate >= 0) (fixedDate + 4) % 7 + 1 else (fixedDate - 1) % 7 + 7
+    }
+
+    /**
+     * If we cross dst boundary, user must see correct clock
+     * @param dayOfMonthBefore value before setting DAY_OF_MONTH field
+     * @return true if we crossed boundary
+     */
+    private fun computeDstBoundaries(dayOfMonthBefore: Int): Boolean {
+        var dstBoundaryReached = false
+        if (fields[MONTH] == 0 && (fields[DAY_OF_YEAR] == 1 || (dayOfMonthBefore == 1 && fields[DAY_OF_MONTH] == 2)) &&
+            (fields[HOUR_OF_DAY] == 23 || fields[HOUR_OF_DAY] == 1) && fields[MINUTE] == 0 && fields[SECOND] == 0
+        ) {
+            fields[DAY_OF_YEAR] = 2
+            fields[DAY_OF_MONTH] = 2
+            dstBoundaryReached = true
+        }
+        if (fields[MONTH] == 5 && fields[DAY_OF_MONTH] == 30 &&
+            fields[HOUR_OF_DAY] == 23 && fields[MINUTE] == 0 && fields[SECOND] == 0
+        ) {
+            fields[DAY_OF_YEAR] = 186
+            fields[DAY_OF_MONTH] = 31
+            dstBoundaryReached = true
+        }
+        if (dstBoundaryReached) {
+            fields[HOUR_OF_DAY] = 0
+            fields[MINUTE] = 0
+            fields[SECOND] = 0
+            fields[HOUR] = 0
+            fields[AM_PM] = AM
+        }
+        return dstBoundaryReached
     }
 
     override fun computeTime() {
@@ -225,7 +265,8 @@ class JalaliCalendar : Calendar {
         val fixedDate = getFixedDateFar1(fields[YEAR], fields[ERA] == AH) +
                 ACCUMULATED_DAYS_IN_MONTH[fields[MONTH]] +
                 if (isSet(DAY_OF_MONTH)) fields[DAY_OF_MONTH] - 1 else 0
-        val timezoneOffset = -getOffset(fixedDate * ONE_DAY_IN_MILLIS)
+        val fixedDateMillis = (fixedDate - EPOCH_OFFSET) * ONE_DAY_IN_MILLIS
+        var timezoneOffset = -timeZone.getOffset(fixedDateMillis)
         val timeOfHour = when {
             isSet(HOUR_OF_DAY) -> fields[HOUR_OF_DAY]
             isSet(HOUR) && isSet(AM_PM) -> fields[HOUR] + if (fields[AM_PM] == AM) 0 else 12
@@ -264,8 +305,6 @@ class JalaliCalendar : Calendar {
 
     @Throws(IllegalStateException::class)
     override fun roll(field: Int, up: Boolean) = throw IllegalStateException("Not supported")
-
-    private fun getOffset(localTime: Long): Int = timeZone.getOffset(localTime)
 
     /* To find the year that associated with fixedDat. */
     private fun getYearFromFixedDate(fd: Int): Int {
@@ -421,12 +460,7 @@ class JalaliCalendar : Calendar {
      */
     operator fun rangeTo(that: JalaliCalendar) = JalaliCalendarRange(this, that)
 
-    override fun toString() = if (isSet(YEAR)) {
-        "${year}/${month.value}/${dayOfMonth}-" +
-                "${get(HOUR_OF_DAY)}:${get(MINUTE)}:${get(SECOND)}"
-    } else {
-        timeInMillis.toString()
-    }
+    override fun toString() = this.toJalaliDateTime(JALALI_PARSE_DATE_TIME_FORMAT)
 
     companion object {
 
@@ -441,8 +475,8 @@ class JalaliCalendar : Calendar {
 
         const val GREGORIAN_DATE_FORMAT = "yyyy-MM-dd"
         const val GREGORIAN_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss"
-        const val JALALI_PARSE_DATE_TIME_FORMAT = "yyyy/mm/dd HH:tt:ss"
-        const val JALALI_DATE_TIME_FORMAT = "WW dd M yyyy ساعت HH:tt:ss"
+        const val JALALI_PARSE_DATE_TIME_FORMAT = "yyyy/mm/dd HH:ii:ss"
+        const val JALALI_DATE_TIME_FORMAT = "WW dd M yyyy ساعت HH:ii:ss"
 
         @JvmField
         val DEFAULT_LOCALE: Locale = Locale.US

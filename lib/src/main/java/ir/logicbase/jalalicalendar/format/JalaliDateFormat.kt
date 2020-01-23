@@ -26,8 +26,8 @@ import java.util.*
  * HH for hour of day number (24 hour-based) with leading zero eg. 07
  * h for hour of day number (12 hour-based) no leading zero eg. 7
  * hh for hour of day number (12 hour-based) with leading zero eg. 07
- * t for minute number no leading zero eg. 5
- * tt for minute number with leading zero eg. 05
+ * i for minute number no leading zero eg. 5
+ * ii for minute number with leading zero eg. 05
  * s for second number no leading zero eg. 5
  * ss for second number with leading zero eg. 05
  * a for Am/Pm first letter eg. ص
