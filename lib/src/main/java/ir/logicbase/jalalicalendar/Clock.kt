@@ -99,6 +99,11 @@ data class Clock(
         return this
     }
 
+    operator fun times(value: Float): Clock {
+        set((this.toSeconds() * value).toInt())
+        return this
+    }
+
     companion object {
         const val MINUTE_DURATION_SECONDS = 60
         const val HOUR_DURATION_SECONDS = 3600

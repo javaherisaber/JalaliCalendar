@@ -32,7 +32,13 @@ class ClockTest {
     @Test
     fun of() {
         val clock = Clock.of("14:37:00")
-        println(Clock.current())
         assertEquals(clock, Clock(14, 37, 0))
+    }
+
+    @Test
+    fun timesFloat() {
+        var clock = Clock(1, 0, 0)
+        clock *= 1.2f
+        assertEquals(clock, Clock(1, 12,0))
     }
 }
