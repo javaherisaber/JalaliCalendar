@@ -1,3 +1,6 @@
+## 1.2.6
+- Add times to float value in Clock.kt
+- Change ClockPeriod.isOverlap() from companion to member function
 ## 1.2.5
 - Fix dst boundaries wrong fields computation
 ## 1.2.4
