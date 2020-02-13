@@ -4,14 +4,8 @@ import ir.logicbase.jalalicalendar.Clock
 
 data class ClockPeriod(var start: Clock, var end: Clock) {
 
-    companion object {
-
-        /**
-         * Check whether [first] and [second] overlap on each other
-         */
-        @JvmStatic
-        fun isOverlap(first: ClockPeriod, second: ClockPeriod): Boolean {
-            return first.start < second.end && first.end > second.start
-        }
-    }
+    /**
+     * Check whether current period overlap on [other]
+     */
+    fun isOverlap(other: ClockPeriod) = this.start < other.end && this.end > other.start
 }
