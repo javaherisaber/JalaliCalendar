@@ -24,6 +24,12 @@ enum class DayOfWeekPersian {
     val persianText: String
         get() = WEEKDAYS_FA[ordinal]
 
+    val persianLetter: String
+        get() = WEEKDAYS_LETTER_FA[ordinal]
+
+    val persianShortText: String
+        get() = WEEKDAYS_SHORT_FA[ordinal]
+
     companion object {
 
         private val WEEKDAYS_FA = arrayOf(
@@ -32,6 +38,26 @@ enum class DayOfWeekPersian {
             "سه شنبه",
             "چهارشنبه",
             "پنج شنبه",
+            "جمعه",
+            "شنبه"
+        )
+
+        private val WEEKDAYS_LETTER_FA = arrayOf(
+            "ی",
+            "د",
+            "س",
+            "چ",
+            "پ",
+            "ج",
+            "ش"
+        )
+
+        private val WEEKDAYS_SHORT_FA = arrayOf(
+            "یک",
+            "دو",
+            "سه",
+            "چهار",
+            "پنج",
             "جمعه",
             "شنبه"
         )
