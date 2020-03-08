@@ -1,3 +1,5 @@
+## 1.2.7
+- Add letter and short representation of DayOfWeekPersian
 ## 1.2.6
 - Add times to float value in Clock.kt
 - Change ClockPeriod.isOverlap() from companion to member function
