@@ -1,3 +1,5 @@
+## 1.2.9
+- Add date part extension functions to JalaliCalendarExtensions
 ## 1.2.7
 - Add letter and short representation of DayOfWeekPersian
 ## 1.2.6
