@@ -6,6 +6,18 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
+ * @return JalaliCalendar with only date part
+ */
+fun JalaliCalendar.cloneDatePart(): JalaliCalendar = JalaliCalendar(year, month, dayOfMonth)
+
+/**
+ * @return check if equals to [other] date parts
+ */
+fun JalaliCalendar.datePartEquals(other: JalaliCalendar): Boolean {
+    return (year == other.year) && (month == other.month) && (dayOfMonth == other.dayOfMonth)
+}
+
+/**
  * @return true if current calendar is before today
  */
 fun JalaliCalendar.isInPast() = JalaliCalendar() > this
