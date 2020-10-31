@@ -37,22 +37,3 @@ fun JalaliCalendar.toGregorianDateTime(
     val date = Date(timeInMillis)
     return dateFormat.format(date)
 }
-
-/**
- * Convert current jalali calendar to jalali datetime string
- *
- * @param pattern date format pattern eg. yyyy/mm/dd
- * @return date time format of this calendar eg. 1398/10/30
- */
-fun JalaliCalendar.toJalaliDateTime(
-    pattern: String = JalaliCalendar.JALALI_DATE_TIME_FORMAT
-): String {
-    val dateFormat = JalaliDateFormat(pattern)
-    return dateFormat.format(this)
-}
-
-/**
- * Epoch time in seconds
- */
-val JalaliCalendar.timeInSeconds: Long
-    get() = timeInMillis / 1000

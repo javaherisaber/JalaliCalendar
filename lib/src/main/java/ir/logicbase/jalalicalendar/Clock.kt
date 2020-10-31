@@ -1,6 +1,5 @@
 package ir.logicbase.jalalicalendar
 
-import ir.logicbase.jalalicalendar.extension.format
 import ir.logicbase.jalalicalendar.format.ClockFormat
 import java.util.*
 
@@ -78,6 +77,13 @@ data class Clock(
     fun toMinutes() = hour * 60 + minute
 
     override fun toString(): String = this.format()
+
+    /**
+     * Format [Clock] instance with given [pattern]
+     */
+    fun format(
+        pattern: String = ClockFormat.PARSE_PATTERN_HOUR_MINUTE_SECOND
+    ): String = ClockFormat(pattern).format(this)
 
     override fun compareTo(other: Clock): Int = when {
         hour != other.hour -> hour - other.hour

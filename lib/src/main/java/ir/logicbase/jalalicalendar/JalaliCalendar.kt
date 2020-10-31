@@ -1,6 +1,5 @@
 package ir.logicbase.jalalicalendar
 
-import ir.logicbase.jalalicalendar.extension.toJalaliDateTime
 import ir.logicbase.jalalicalendar.format.JalaliDateFormat
 import ir.logicbase.jalalicalendar.uti.CalendarLeapUtils
 import java.text.SimpleDateFormat
@@ -266,7 +265,7 @@ class JalaliCalendar : Calendar {
                 ACCUMULATED_DAYS_IN_MONTH[fields[MONTH]] +
                 if (isSet(DAY_OF_MONTH)) fields[DAY_OF_MONTH] - 1 else 0
         val fixedDateMillis = (fixedDate - EPOCH_OFFSET) * ONE_DAY_IN_MILLIS
-        var timezoneOffset = -timeZone.getOffset(fixedDateMillis)
+        val timezoneOffset = -timeZone.getOffset(fixedDateMillis)
         val timeOfHour = when {
             isSet(HOUR_OF_DAY) -> fields[HOUR_OF_DAY]
             isSet(HOUR) && isSet(AM_PM) -> fields[HOUR] + if (fields[AM_PM] == AM) 0 else 12
@@ -421,6 +420,12 @@ class JalaliCalendar : Calendar {
     val daysInMonth: Int
         get() = daysInMonth(isLeapYear(year), get(MONTH))
 
+    /**
+     * Epoch time in seconds
+     */
+    val timeInSeconds: Long
+        get() = timeInMillis / 1000
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -460,7 +465,12 @@ class JalaliCalendar : Calendar {
      */
     operator fun rangeTo(that: JalaliCalendar) = JalaliCalendarRange(this, that)
 
-    override fun toString() = this.toJalaliDateTime(JALALI_PARSE_DATE_TIME_FORMAT)
+    override fun toString() = this.format(JALALI_PARSE_DATE_TIME_FORMAT)
+
+    fun format(pattern: String = JALALI_DATE_TIME_FORMAT): String {
+        val dateFormat = JalaliDateFormat(pattern)
+        return dateFormat.format(this)
+    }
 
     companion object {
 
