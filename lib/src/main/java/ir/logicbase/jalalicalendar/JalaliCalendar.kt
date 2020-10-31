@@ -472,6 +472,37 @@ class JalaliCalendar : Calendar {
         return dateFormat.format(this)
     }
 
+    /**
+     * Convert current jalali calendar to gregorian datetime string
+     *
+     * @param pattern date format pattern eg. yyyy-MM-dd
+     * @param locale date format locale eg. per or en
+     * @return date time format of this calendar eg. 2020-01-14 16:45:00
+     */
+    fun toGregorianDateTime(
+        pattern: String = GREGORIAN_DATE_TIME_FORMAT,
+        locale: Locale = DEFAULT_LOCALE
+    ): String {
+        val dateFormat = SimpleDateFormat(pattern, locale)
+        val date = Date(timeInMillis)
+        return dateFormat.format(date)
+    }
+
+    /**
+     * @return true if current calendar is before today
+     */
+    fun isInPast() = JalaliCalendar() > this
+
+    /**
+     * @return JalaliCalendar with only date part
+     */
+    fun cloneDatePart(): JalaliCalendar = JalaliCalendar(year, month, dayOfMonth)
+
+    /**
+     * @return check if equals to [other] date parts
+     */
+    fun datePartEquals(other: JalaliCalendar): Boolean = (year == other.year) && (month == other.month) && (dayOfMonth == other.dayOfMonth)
+
     companion object {
 
         private const val AH = 1 // Value for the after hejra era.
