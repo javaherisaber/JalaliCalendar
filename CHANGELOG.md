@@ -1,3 +1,6 @@
+## 1.3.0
+- Upgrade Kotlin to 1.4.10, AGP to 4.1.0 and Gradle to 6.5
+- Move format and timeInSeconds functions to original class
 ## 1.2.9
 - Add date part extension functions to JalaliCalendarExtensions
 ## 1.2.7
